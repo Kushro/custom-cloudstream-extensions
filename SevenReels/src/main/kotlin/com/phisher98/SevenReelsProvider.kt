@@ -59,8 +59,10 @@ class SevenReelsProvider : MainAPI() {
         val tags = document.select("a[href*='/genre/'], a[href*='genre=']").map { it.text() }
         val year = document.selectFirst("a[href*='year='], span.item-year, .release-year")?.text()?.trim()?.toIntOrNull()
             ?: Regex("(\\d{4})").find(document.selectFirst(".dp-i-stats, .film-stats")?.text() ?: "")?.value?.toIntOrNull()
-        val rating = document.selectFirst("span.item-imdb, .imdb-rating")?.text()
-            ?.replace(Regex("[^\\d.]"), "")?.toFloatOrNull()?.times(1000)?.toInt()
+        val score = Score.from10(
+            document.selectFirst("span.item-imdb, .imdb-rating")?.text()
+                ?.replace(Regex("[^\\d.]"), "")
+        )
         val isMovie = url.contains("/movie/")
         val isAnime = url.contains("/anime/")
         val id = Regex("-(\\d+)$").find(url.trimEnd('/'))?.groupValues?.get(1)
@@ -73,7 +75,7 @@ class SevenReelsProvider : MainAPI() {
                 }.getOrNull()
             } ?: url
             newMovieLoadResponse(title, url, TvType.Movie, episodeData) {
-                this.posterUrl = poster; this.plot = description; this.tags = tags; this.year = year; this.rating = rating
+                this.posterUrl = poster; this.plot = description; this.tags = tags; this.year = year; this.score = score
             }
         } else {
             val episodes = mutableListOf<Episode>()
@@ -104,12 +106,12 @@ class SevenReelsProvider : MainAPI() {
             }
             if (isAnime) {
                 newAnimeLoadResponse(title, url, TvType.Anime) {
-                    this.posterUrl = poster; this.plot = description; this.tags = tags; this.year = year; this.rating = rating
+                    this.posterUrl = poster; this.plot = description; this.tags = tags; this.year = year; this.score = score
                     addEpisodes(DubStatus.Subbed, episodes)
                 }
             } else {
                 newTvSeriesLoadResponse(title, url, TvType.TvSeries, episodes) {
-                    this.posterUrl = poster; this.plot = description; this.tags = tags; this.year = year; this.rating = rating
+                    this.posterUrl = poster; this.plot = description; this.tags = tags; this.year = year; this.score = score
                 }
             }
         }
