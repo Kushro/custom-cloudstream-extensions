@@ -6,14 +6,13 @@ concurrency:
   cancel-in-progress: true
 
 on:
-  on:
-    push:
-      branches:
-        - master
-        - main
-      paths-ignore:
-        - '*.md'
-    workflow_dispatch:
+  push:
+    branches:
+      - master
+      - main
+    paths-ignore:
+      - "*.md"
+  workflow_dispatch:
 
 jobs:
   build:
