@@ -53,7 +53,7 @@ abstract class TmdbHydraBase : MainAPI() {
             plot                = d.overview
             year                = d.release_date?.take(4)?.toIntOrNull()
             tags                = d.genres?.mapNotNull { it.name }
-            rating              = d.vote_average?.times(1000)?.toInt()
+            score               = Score.from10(d.vote_average?.toString())
             duration            = d.runtime
         }
     }
@@ -81,7 +81,7 @@ abstract class TmdbHydraBase : MainAPI() {
             plot                = d.overview
             year                = d.first_air_date?.take(4)?.toIntOrNull()
             tags                = d.genres?.mapNotNull { it.name }
-            rating              = d.vote_average?.times(1000)?.toInt()
+            score               = Score.from10(d.vote_average?.toString())
         }
     }
 
