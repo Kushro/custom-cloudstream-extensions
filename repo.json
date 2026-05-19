@@ -1,0 +1,9 @@
+{
+    "name": "Custom Kushro Repo",
+    "iconUrl": "https://raw.githubusercontent.com/phisher98/TVVVV/refs/heads/main/Icons/RepoIcon.png",
+    "description": "Custom Kushro Repo",
+    "manifestVersion": 1,
+    "pluginLists": [
+      "https://raw.githubusercontent.com/Kushro/custom-cloudstream-extensions/refs/heads/builds/plugins.json"
+    ]
+}
