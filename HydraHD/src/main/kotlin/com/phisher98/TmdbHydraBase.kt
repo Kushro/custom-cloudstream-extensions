@@ -54,7 +54,7 @@ abstract class TmdbHydraBase : MainAPI() {
             year                = d.release_date?.take(4)?.toIntOrNull()
             tags                = d.genres?.mapNotNull { it.name }
             rating              = d.vote_average?.times(1000)?.toInt()
-            addDuration(d.runtime?.toString())
+            duration            = d.runtime
         }
     }
 
