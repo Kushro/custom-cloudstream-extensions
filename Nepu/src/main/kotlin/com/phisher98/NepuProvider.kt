@@ -42,7 +42,7 @@ class NepuProvider : MainAPI() {
             ?.removePrefix("Ep ")?.split("/")?.firstOrNull()?.trim()?.toIntOrNull()
         return newAnimeSearchResponse(title, href, type) {
             this.posterUrl = posterUrl
-            addDubStatus(isDub = false, subEpisodes = epNum)
+            addDubStatus(dubExist = false, subExist = true, subEpisodes = epNum)
         }
     }
 
@@ -61,7 +61,9 @@ class NepuProvider : MainAPI() {
         val tags = document.select("a[href*='/genre/']").map { it.text() }
         val year = document.selectFirst("a[href*='?year='], span.item-year")?.text()?.trim()?.toIntOrNull()
             ?: Regex("(\\d{4})").find(document.selectFirst(".dp-i-stats, .film-stats")?.text() ?: "")?.value?.toIntOrNull()
-        val rating = document.selectFirst("span.item-imdb")?.text()?.replace(Regex("[^\\d.]"), "")?.toFloatOrNull()?.times(1000)?.toInt()
+        val score = Score.from10(
+            document.selectFirst("span.item-imdb")?.text()?.replace(Regex("[^\\d.]"), "")
+        )
         val isMovie = url.contains("/movie/")
         val id = Regex("-(\\d+)$").find(url.trimEnd('/'))?.groupValues?.get(1)
 
@@ -73,7 +75,7 @@ class NepuProvider : MainAPI() {
                 this.plot = description
                 this.tags = tags
                 this.year = year
-                this.rating = rating
+                this.score = score
             }
         } else {
             val episodes = mutableListOf<Episode>()
@@ -103,7 +105,7 @@ class NepuProvider : MainAPI() {
                 this.plot = description
                 this.tags = tags
                 this.year = year
-                this.rating = rating
+                this.score = score
                 addEpisodes(DubStatus.Subbed, episodes)
             }
         }
